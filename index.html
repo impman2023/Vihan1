@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vihan in Chapri Game</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Player object
+    const player = {
+        x: canvas.width / 2,
+        y: canvas.height - 30,
+        width: 20,
+        height: 20,
+        speed: 5
+    };
+
+    // Vihan object
+    const vihan = {
+        x: Math.random() * (canvas.width - 20),
+        y: 0,
+        width: 30,
+        height: 30,
+        speed: 3
+    };
+
+    // Event listener for player movement
+    document.addEventListener('keydown', movePlayer);
+
+    function movePlayer(e) {
+        if (e.key === 'ArrowLeft' && player.x > 0) {
+            player.x -= player.speed;
+        } else if (e.key === 'ArrowRight' && player.x < canvas.width - player.width) {
+            player.x += player.speed;
+        }
+    }
+
+    function draw() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw player
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+
+        // Draw Vihan
+        ctx.fillStyle = 'red';
+        ctx.fillRect(vihan.x, vihan.y, vihan.width, vihan.height);
+
+        // Move Vihan downwards
+        vihan.y += vihan.speed;
+
+        // Check for collision
+        if (
+            player.x < vihan.x + vihan.width &&
+            player.x + player.width > vihan.x &&
+            player.y < vihan.y + vihan.height &&
+            player.y + player.height > vihan.y
+        ) {
+            // Collision occurred, game over
+            alert("Oh no! You lost because Vihan is in Chapri.");
+            resetGame();
+        }
+
+        // If Vihan reaches bottom, reset position
+        if (vihan.y > canvas.height) {
+            vihan.x = Math.random() * (canvas.width - 20);
+            vihan.y = 0;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    function resetGame() {
+        player.x = canvas.width / 2;
+        player.y = canvas.height - 30;
+        vihan.x = Math.random() * (canvas.width - 20);
+        vihan.y = 0;
+    }
+
+    draw();
+</script>
+</body>
+</html>
